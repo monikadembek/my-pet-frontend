@@ -61,9 +61,21 @@
         <p-password
           id="password"
           formControlName="password"
-          [feedback]="false"
+          [feedback]="true"
           [toggleMask]="true"
-          [ngClass]="{ 'ng-invalid ng-dirty': password.errors }" />
+          [ngClass]="{ 'ng-invalid ng-dirty': password.errors }">
+          <ng-template pTemplate="footer">
+            <p-divider />
+            <p class="mt-2">Suggestions</p>
+            <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
+              <li>At least one lowercase</li>
+              <li>At least one uppercase</li>
+              <li>At least one numeric</li>
+              <li>At least one special character</li>
+              <li>Minimum 8 characters</li>
+            </ul>
+          </ng-template>
+        </p-password>
         @if (password.dirty && password.errors?.['required']) {
           <small class="error">Password is required</small>
         }
@@ -79,6 +91,12 @@
             {{ password.errors?.['maxlength']['requiredLength'] }}</small
           >
         }
+        @if (password.dirty && password.errors?.['pattern']) {
+          <small class="error">
+            Password must contain at least one lowercase, one uppercase, one
+            numeric and at least one special character
+          </small>
+        }
       </div>
       <div class="flex flex-column gap-1 mb-4">
         <label for="confirmPassword">Confirm password</label>
@@ -88,10 +106,13 @@
           [feedback]="false"
           [toggleMask]="true"
           [ngClass]="{ 'ng-invalid ng-dirty': name.errors }" />
+        @if (confirmPassword.dirty && confirmPassword.errors?.['required']) {
+          <small class="error">Confirm password is required</small>
+        }
         @if (
           confirmPassword.dirty && registerForm.errors?.['confirmPasswordError']
         ) {
-          <small class="error">Password doesn't match</small>
+          <small class="error">Confirm password doesn't match</small>
         }
       </div>
 

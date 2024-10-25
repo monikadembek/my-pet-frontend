@@ -14,6 +14,7 @@ import { SignUpDto, TokensResponseDto } from '../../models/auth-models';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { DividerModule } from 'primeng/divider';
 
 @Component({
   selector: 'app-register',
@@ -25,6 +26,7 @@ import { AuthService } from '../../services/auth.service';
     ButtonModule,
     PasswordModule,
     RouterLink,
+    DividerModule,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
@@ -33,6 +35,8 @@ export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
   errorMsg = '';
   requestProcessing = false;
+  strongPasswordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=\[\]{};:'",.<>?/~`|\\])[A-Za-z\d!@#$%^&*()_\-+=\[\]{};:'",.<>?/~`|\\]{8,}$/;
 
   get name(): FormControl {
     return this.registerForm.get('name') as FormControl<string>;
@@ -79,18 +83,12 @@ export class RegisterComponent implements OnInit {
           '',
           [
             Validators.required,
-            Validators.minLength(4),
+            Validators.minLength(8),
             Validators.maxLength(256),
+            Validators.pattern(this.strongPasswordRegex),
           ],
         ],
-        confirmPassword: [
-          '',
-          [
-            Validators.required,
-            Validators.minLength(4),
-            Validators.maxLength(256),
-          ],
-        ],
+        confirmPassword: ['', [Validators.required]],
       },
       { validators: confirmPasswordValidator }
     );
@@ -105,6 +103,7 @@ export class RegisterComponent implements OnInit {
       this.name.markAsDirty();
       this.email.markAsDirty();
       this.password.markAsDirty();
+      this.confirmPassword.markAsDirty();
     }
 
     if (this.registerForm.valid) {
