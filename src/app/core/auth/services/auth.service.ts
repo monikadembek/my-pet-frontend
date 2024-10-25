@@ -10,6 +10,7 @@ import {
 } from '../models/auth-models';
 import { ErrorHandlingService } from '../../services/error-handling.service';
 import { Router } from '@angular/router';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root',
@@ -19,19 +20,34 @@ export class AuthService {
     false
   );
 
-  get isLoggedIn(): boolean {
-    return !!this.getToken('accessToken');
-  }
-
   constructor(
     private authApiService: AuthApiService,
     private errorHandlingService: ErrorHandlingService,
     private router: Router
   ) {}
 
+  isLoggedIn(): boolean {
+    const token = this.getToken('accessToken');
+    return token !== null && !this.isTokenExpired(token);
+  }
+
+  private isTokenExpired(token: string): boolean {
+    const decoded = jwtDecode(token);
+    console.log('decodedToken: ', decoded);
+    if (!decoded || !decoded.exp) {
+      return true;
+    }
+    const expirationDate = decoded.exp * 1000;
+    return Date.now() > expirationDate;
+  }
+
+  saveToken(key: string, token: string): void {
+    localStorage.setItem(key, token);
+  }
+
   saveTokens(accessToken: string, refreshToken: string): void {
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('refreshToken', refreshToken);
+    this.saveToken('accessToken', accessToken);
+    this.saveToken('refreshToken', refreshToken);
   }
 
   getToken(key: string): string | null {
