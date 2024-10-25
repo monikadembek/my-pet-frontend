@@ -1,4 +1,4 @@
-@import '../../../assets/scss/colors';
+@import '../../../../../assets/scss/colors';
 
 .container {
   width: 100%;
@@ -17,7 +17,7 @@
   height: 100%;
   padding: 60px 40px;
   background-color: $secondary-color;
-  background-image: url('../../../assets/images/cat-and-dog.png');
+  background-image: url('../../../../../assets/images/cat-and-dog.png');
   background-position: bottom center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -42,7 +42,7 @@
   height: 120px;
 }
 
-.content-container {
+.form-container {
   min-width: 50%;
   width: auto;
   height: 100vh;
@@ -52,23 +52,37 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+
+  .form {
+    max-width: 400px;
+    width: auto;
+  }
+
+  .error {
+    color: $primary-color-light;
+    margin-top: 5px;
+  }
 }
 
-a.button-link {
-  text-align: center;
-  padding: 20px 40px;
-  cursor: pointer;
-  width: 300px;
-  display: block;
-  border-radius: 50px;
+::ng-deep .p-inputwrapper,
+::ng-deep .p-password-input {
+  width: 100%;
 }
 
-.button-link--secondary-color {
-  background-color: $secondary-color;
-  color: $primary-color;
+::ng-deep .p-input-icon-right > .p-icon-wrapper {
+  top: 30%;
+}
+
+::ng-deep .p-button .p-button-icon-right {
+  margin-left: 0.5rem !important;
+}
+
+.link {
+  color: inherit;
+  text-decoration: underline;
+  transition: color 0.3s;
 
   &:hover {
-    opacity: 85%;
+    color: $primary-color-light;
   }
 }

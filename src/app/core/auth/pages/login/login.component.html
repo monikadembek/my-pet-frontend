@@ -1,0 +1,98 @@
+<div class="container flex">
+  <div class="image-container hidden md:block">
+    <header class="header">
+      <a routerLink="/">
+        <img src="assets/logo/my-pet-logo.svg" alt="my pet logo" class="logo" />
+      </a>
+      <div class="header-text ml-4">
+        <h2>Welcome to</h2>
+        <h1>My Pet App</h1>
+      </div>
+    </header>
+  </div>
+  <div class="form-container md:w-6 w-full">
+    <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)" class="form">
+      <h2 class="mb-5">Log in to your account</h2>
+      <div class="flex flex-column gap-1 mb-3">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          pInputText
+          name="email"
+          id="email"
+          [(ngModel)]="emailInput"
+          #email="ngModel"
+          required
+          minlength="2"
+          maxlength="256"
+          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+          [ngClass]="{
+            'ng-invalid ng-dirty': email.dirty && email.errors,
+          }" />
+        @if (email.dirty && email.errors?.['required']) {
+          <small class="error">Email is required</small>
+        }
+        @if (email.dirty && email.errors?.['maxlength']) {
+          aa
+          <small class="error"
+            >Maximum allowed length is
+            {{ email.errors?.['maxlength']['requiredLength'] }}</small
+          >
+        }
+        @if (email.dirty && email.errors?.['pattern']) {
+          <small class="error">Entered email is invalid</small>
+        }
+      </div>
+      <div class="flex flex-column gap-1 mb-3">
+        <label for="password">Password</label>
+        <p-password
+          name="password"
+          id="password"
+          [(ngModel)]="passwordInput"
+          #password="ngModel"
+          required
+          minlength="4"
+          maxLength="256"
+          [feedback]="false"
+          [toggleMask]="true"
+          [ngClass]="{
+            'ng-invalid ng-dirty': password.dirty && password.errors,
+          }" />
+        @if (password.dirty && password.errors?.['required']) {
+          <small class="error">Password is required</small>
+        }
+        @if (password.dirty && password.errors?.['minlength']) {
+          <small class="error"
+            >Minimum required length is
+            {{ password.errors?.['minlength']['requiredLength'] }}</small
+          >
+        }
+        @if (password.dirty && password.errors?.['maxlength']) {
+          <small class="error"
+            >Maximum allowed length is
+            {{ password.errors?.['maxlength']['requiredLength'] }}</small
+          >
+        }
+      </div>
+
+      @if (errorMsg.length > 0) {
+        <p class="error" class="mt-2 mb-2">{{ errorMsg }}</p>
+      }
+
+      <button
+        class="mt-3"
+        type="submit"
+        pButton
+        size="small"
+        [icon]="requestProcessing ? 'pi pi-spin pi-spinner' : ''"
+        iconPos="right"
+        [disabled]="requestProcessing || email.pristine || password.pristine">
+        Log in
+      </button>
+    </form>
+    <p class="mt-5">
+      New to My Pet App?
+      <a routerLink="/register" class="link">Create account</a>
+    </p>
+  </div>
+</div>

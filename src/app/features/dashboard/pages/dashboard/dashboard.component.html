@@ -1,0 +1,18 @@
+<div class="container">
+  <header class="header">
+    <div class="flex align-items-center">
+      <a routerLink="/">
+        <img src="assets/logo/my-pet-logo.svg" alt="my pet logo" class="logo" />
+      </a>
+      <h1 class="header-text ml-3">My Pet App</h1>
+    </div>
+    @if (isLoggedIn) {
+      <button pButton (click)="logout()">Logout</button>
+    } @else {
+      <button pButton (click)="login()">Login</button>
+    }
+  </header>
+  <div class="content">
+    <p>Dashboard</p>
+  </div>
+</div>
