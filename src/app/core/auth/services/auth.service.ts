@@ -11,6 +11,11 @@ import {
 import { ErrorHandlingService } from '../../services/error-handling.service';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
+import {
+  ACCESS_TOKEN_STORAGE_KEY,
+  REFRESH_TOKEN_STORAGE_KEY,
+  USER_DATA_STORAGE_KEY,
+} from '../../../constants/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -27,7 +32,7 @@ export class AuthService {
   ) {}
 
   isLoggedIn(): boolean {
-    const token = this.getToken('accessToken');
+    const token = this.getToken(ACCESS_TOKEN_STORAGE_KEY);
     return token !== null && !this.isTokenExpired(token);
   }
 
@@ -46,8 +51,8 @@ export class AuthService {
   }
 
   saveTokens(accessToken: string, refreshToken: string): void {
-    this.saveToken('accessToken', accessToken);
-    this.saveToken('refreshToken', refreshToken);
+    this.saveToken(ACCESS_TOKEN_STORAGE_KEY, accessToken);
+    this.saveToken(REFRESH_TOKEN_STORAGE_KEY, refreshToken);
   }
 
   getToken(key: string): string | null {
@@ -60,7 +65,7 @@ export class AuthService {
 
   saveUserData(userId: number, name: string, email: string): void {
     localStorage.setItem(
-      'user',
+      USER_DATA_STORAGE_KEY,
       JSON.stringify({
         userId,
         name,
@@ -70,7 +75,7 @@ export class AuthService {
   }
 
   getUserData(): User | null {
-    const user: string | null = localStorage.getItem('user');
+    const user: string | null = localStorage.getItem(USER_DATA_STORAGE_KEY);
     if (!user) {
       return null;
     }
@@ -78,7 +83,7 @@ export class AuthService {
   }
 
   removeUserData(): void {
-    localStorage.removeItem('user');
+    localStorage.removeItem(USER_DATA_STORAGE_KEY);
   }
 
   processRegisterLogic(signUpData: SignUpDto): Observable<TokensResponseDto> {
@@ -121,8 +126,8 @@ export class AuthService {
           return this.errorHandlingService.handleError(error);
         }),
         map(response => {
-          this.removeToken('accessToken');
-          this.removeToken('refreshToken');
+          this.removeToken(ACCESS_TOKEN_STORAGE_KEY);
+          this.removeToken(REFRESH_TOKEN_STORAGE_KEY);
           this.removeUserData();
           return response;
         })

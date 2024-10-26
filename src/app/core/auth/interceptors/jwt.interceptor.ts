@@ -8,10 +8,14 @@ import { inject } from '@angular/core';
 import { catchError, switchMap, throwError } from 'rxjs';
 import { AuthApiService } from '../services/auth-api.service';
 import { Router } from '@angular/router';
+import {
+  ACCESS_TOKEN_STORAGE_KEY,
+  REFRESH_TOKEN_STORAGE_KEY,
+} from '../../../constants/constants';
 
 export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
-  const accessToken = authService.getToken('accessToken');
+  const accessToken = authService.getToken(ACCESS_TOKEN_STORAGE_KEY);
 
   function addTokenToHeaders(req: HttpRequest<unknown>, token: string) {
     return req.clone({
@@ -25,7 +29,7 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
       .refresh()
       .pipe(
         switchMap(() => {
-          const newAccessToken = authService.getToken('accessToken');
+          const newAccessToken = authService.getToken(ACCESS_TOKEN_STORAGE_KEY);
           return next(addTokenToHeaders(req, newAccessToken as string));
         }),
         catchError(error => {
@@ -45,7 +49,7 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
     catchError(error => {
       // check for error due to expired token
       if (error.status === 401 && accessToken) {
-        const refreshToken = authService.getToken('refreshToken');
+        const refreshToken = authService.getToken(REFRESH_TOKEN_STORAGE_KEY);
         if (refreshToken) {
           return handleExpiredToken(req, next);
         }

@@ -8,6 +8,7 @@ import {
 } from '../models/auth-models';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { API_URLS } from '../../../constants/api-urls.constants';
 
 @Injectable({
   providedIn: 'root',
@@ -19,23 +20,25 @@ export class AuthApiService {
 
   register(signUpData: SignUpDto): Observable<TokensResponseDto> {
     return this.http.post<TokensResponseDto>(
-      `${this.apiUrl}/auth/signup`,
+      `${this.apiUrl}${API_URLS.USER_REGISTER}`,
       signUpData
     );
   }
 
   login(signInDto: SignInDto): Observable<SignInResponseDto> {
     return this.http.post<SignInResponseDto>(
-      `${this.apiUrl}/auth/login`,
+      `${this.apiUrl}${API_URLS.USER_LOGIN}`,
       signInDto
     );
   }
 
   logout(): Observable<void> {
-    return this.http.get<void>(`${this.apiUrl}/auth/logout`);
+    return this.http.get<void>(`${this.apiUrl}${API_URLS.USER_LOGOUT}`);
   }
 
   refresh(): Observable<TokensResponseDto> {
-    return this.http.get<TokensResponseDto>(`${this.apiUrl}/auth/refresh`);
+    return this.http.get<TokensResponseDto>(
+      `${this.apiUrl}${API_URLS.TOKEN_REFRESH}`
+    );
   }
 }
