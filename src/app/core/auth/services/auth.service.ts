@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { DestroyRef, inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, map, Observable, retry } from 'rxjs';
 import { AuthApiService } from './auth-api.service';
 import {
@@ -16,11 +16,14 @@ import {
   REFRESH_TOKEN_STORAGE_KEY,
   USER_DATA_STORAGE_KEY,
 } from '../../../constants/constants';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  private destroyRef = inject(DestroyRef);
+
   isLoggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
     false
   );
@@ -130,7 +133,8 @@ export class AuthService {
           this.removeToken(REFRESH_TOKEN_STORAGE_KEY);
           this.removeUserData();
           return response;
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(res => {
         console.log('logout res', res);
