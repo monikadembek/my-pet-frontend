@@ -15,6 +15,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { DividerModule } from 'primeng/divider';
+import { NotificationsService } from '../../../services/notifications.service';
 
 @Component({
   selector: 'app-register',
@@ -57,6 +58,7 @@ export class RegisterComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
+    private notificationsService: NotificationsService,
     private router: Router
   ) {}
 
@@ -104,6 +106,10 @@ export class RegisterComponent implements OnInit {
       this.email.markAsDirty();
       this.password.markAsDirty();
       this.confirmPassword.markAsDirty();
+
+      this.notificationsService.showError(
+        'Form contains errors, please correct them'
+      );
     }
 
     if (this.registerForm.valid) {
@@ -120,6 +126,9 @@ export class RegisterComponent implements OnInit {
           console.log('subscribe - next callback ', response);
           this.requestProcessing = false;
           this.registerForm.reset();
+          this.notificationsService.showSuccess(
+            'You have successfully created account'
+          );
           this.router.navigate(['dashboard']);
         },
         error: error => {
