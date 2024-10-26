@@ -5,11 +5,10 @@ import { Router, RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
-import { AuthApiService } from '../../services/auth-api.service';
 import { SignInDto, SignInResponseDto } from '../../models/auth-models';
-import { catchError, retry } from 'rxjs';
 import { ErrorHandlingService } from '../../../services/error-handling.service';
 import { AuthService } from '../../services/auth.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-login',
@@ -44,18 +43,21 @@ export class LoginComponent {
         email: form.controls['email'].value,
         password: form.controls['password'].value,
       };
-      this.authService.processLoginLogic(loginData).subscribe({
-        next: (response: SignInResponseDto) => {
-          console.log('subscribe - next callback ', response);
-          this.requestProcessing = false;
-          this.router.navigate(['/dashboard']);
-        },
-        error: error => {
-          console.log('subscribe - error callback ', error);
-          this.errorMsg = error.message;
-          this.requestProcessing = false;
-        },
-      });
+      this.authService
+        .processLoginLogic(loginData)
+        .pipe(takeUntilDestroyed())
+        .subscribe({
+          next: (response: SignInResponseDto) => {
+            console.log('subscribe - next callback ', response);
+            this.requestProcessing = false;
+            this.router.navigate(['/dashboard']);
+          },
+          error: error => {
+            console.log('subscribe - error callback ', error);
+            this.errorMsg = error.message;
+            this.requestProcessing = false;
+          },
+        });
     }
   }
 }

@@ -16,6 +16,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { DividerModule } from 'primeng/divider';
 import { NotificationsService } from '../../../services/notifications.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-register',
@@ -121,22 +122,25 @@ export class RegisterComponent implements OnInit {
         password: this.password.value,
       };
 
-      this.authService.processRegisterLogic(signUpData).subscribe({
-        next: (response: TokensResponseDto) => {
-          console.log('subscribe - next callback ', response);
-          this.requestProcessing = false;
-          this.registerForm.reset();
-          this.notificationsService.showSuccess(
-            'You have successfully created account'
-          );
-          this.router.navigate(['dashboard']);
-        },
-        error: error => {
-          console.log('subscribe - error callback ', error);
-          this.errorMsg = error;
-          this.requestProcessing = false;
-        },
-      });
+      this.authService
+        .processRegisterLogic(signUpData)
+        .pipe(takeUntilDestroyed())
+        .subscribe({
+          next: (response: TokensResponseDto) => {
+            console.log('subscribe - next callback ', response);
+            this.requestProcessing = false;
+            this.registerForm.reset();
+            this.notificationsService.showSuccess(
+              'You have successfully created account'
+            );
+            this.router.navigate(['dashboard']);
+          },
+          error: error => {
+            console.log('subscribe - error callback ', error);
+            this.errorMsg = error;
+            this.requestProcessing = false;
+          },
+        });
     }
   }
 }
