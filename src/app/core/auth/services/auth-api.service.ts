@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
+  AuthResponseDto,
   SignInDto,
-  SignInResponseDto,
   SignUpDto,
   TokensResponseDto,
 } from '../models/auth-models';
@@ -18,15 +18,15 @@ export class AuthApiService {
 
   constructor(private http: HttpClient) {}
 
-  register(signUpData: SignUpDto): Observable<TokensResponseDto> {
-    return this.http.post<TokensResponseDto>(
+  register(signUpData: SignUpDto): Observable<AuthResponseDto> {
+    return this.http.post<AuthResponseDto>(
       `${this.apiUrl}${API_URLS.USER_REGISTER}`,
       signUpData
     );
   }
 
-  login(signInDto: SignInDto): Observable<SignInResponseDto> {
-    return this.http.post<SignInResponseDto>(
+  login(signInDto: SignInDto): Observable<AuthResponseDto> {
+    return this.http.post<AuthResponseDto>(
       `${this.apiUrl}${API_URLS.USER_LOGIN}`,
       signInDto
     );

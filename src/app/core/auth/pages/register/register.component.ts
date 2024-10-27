@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -39,6 +39,8 @@ export class RegisterComponent implements OnInit {
   requestProcessing = false;
   strongPasswordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=\[\]{};:'",.<>?/~`|\\])[A-Za-z\d!@#$%^&*()_\-+=\[\]{};:'",.<>?/~`|\\]{8,}$/;
+
+  destroyRef = inject(DestroyRef);
 
   get name(): FormControl {
     return this.registerForm.get('name') as FormControl<string>;
@@ -124,7 +126,7 @@ export class RegisterComponent implements OnInit {
 
       this.authService
         .processRegisterLogic(signUpData)
-        .pipe(takeUntilDestroyed())
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: (response: TokensResponseDto) => {
             console.log('subscribe - next callback ', response);
