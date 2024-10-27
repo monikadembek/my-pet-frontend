@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
-import { SignInDto, SignInResponseDto } from '../../models/auth-models';
+import { AuthResponseDto, SignInDto } from '../../models/auth-models';
 import { ErrorHandlingService } from '../../../services/error-handling.service';
 import { AuthService } from '../../services/auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -30,6 +30,8 @@ export class LoginComponent {
   errorMsg = '';
   requestProcessing = false;
 
+  destroyRef = inject(DestroyRef);
+
   constructor(
     private authService: AuthService,
     private errorHandlingService: ErrorHandlingService,
@@ -45,9 +47,9 @@ export class LoginComponent {
       };
       this.authService
         .processLoginLogic(loginData)
-        .pipe(takeUntilDestroyed())
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
-          next: (response: SignInResponseDto) => {
+          next: (response: AuthResponseDto) => {
             console.log('subscribe - next callback ', response);
             this.requestProcessing = false;
             this.router.navigate(['/dashboard']);

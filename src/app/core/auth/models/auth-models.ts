@@ -14,7 +14,7 @@ export interface SignInDto {
   password: string;
 }
 
-export interface SignInResponseDto {
+export interface AuthResponseDto {
   accessToken: string;
   refreshToken: string;
   userId: number;

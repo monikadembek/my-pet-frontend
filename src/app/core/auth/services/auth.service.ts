@@ -2,8 +2,8 @@ import { DestroyRef, inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, map, Observable, retry } from 'rxjs';
 import { AuthApiService } from './auth-api.service';
 import {
+  AuthResponseDto,
   SignInDto,
-  SignInResponseDto,
   SignUpDto,
   TokensResponseDto,
   User,
@@ -89,29 +89,28 @@ export class AuthService {
     localStorage.removeItem(USER_DATA_STORAGE_KEY);
   }
 
-  processRegisterLogic(signUpData: SignUpDto): Observable<TokensResponseDto> {
+  processRegisterLogic(signUpData: SignUpDto): Observable<AuthResponseDto> {
     return this.authApiService.register(signUpData).pipe(
       retry(3),
       catchError(error => {
         return this.errorHandlingService.handleError(error);
       }),
-      map((response: TokensResponseDto) => {
+      map((response: AuthResponseDto) => {
         this.saveTokens(response.accessToken, response.refreshToken);
-        // TODO: save user data when backend implements returning user info in response
-        // this.saveUserData(response.userId, response.name, response.email);
+        this.saveUserData(response.userId, response.name, response.email);
         this.isLoggedInSubject.next(true);
         return response;
       })
     );
   }
 
-  processLoginLogic(loginData: SignInDto): Observable<SignInResponseDto> {
+  processLoginLogic(loginData: SignInDto): Observable<AuthResponseDto> {
     return this.authApiService.login(loginData).pipe(
       retry(3),
       catchError(error => {
         return this.errorHandlingService.handleError(error);
       }),
-      map((response: SignInResponseDto) => {
+      map((response: AuthResponseDto) => {
         this.saveTokens(response.accessToken, response.refreshToken);
         this.saveUserData(response.userId, response.name, response.email);
         this.isLoggedInSubject.next(true);
