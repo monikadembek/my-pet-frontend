@@ -15,6 +15,8 @@ import { PasswordModule } from 'primeng/password';
 import { AuthService } from '../../services/auth.service';
 import { confirmPasswordValidator } from '../../../validators/confirm-password.validator';
 import { NotificationsService } from '../../../services/notifications.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ApiResponse } from '../../../models/models';
 
 @Component({
   selector: 'app-reset-password',
@@ -38,7 +40,7 @@ export class ResetPasswordComponent implements OnInit {
   strongPasswordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=\[\]{};:'",.<>?/~`|\\])[A-Za-z\d!@#$%^&*()_\-+=\[\]{};:'",.<>?/~`|\\]{8,}$/;
   formSent = false;
-  resetPasswordToken = '';
+  tokenExists = true;
 
   destroyRef = inject(DestroyRef);
 
@@ -59,11 +61,15 @@ export class ResetPasswordComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
-    console.log(this.getToken());
+    this.tokenExists = this.isTokenAvailable();
   }
 
   private getToken(): string {
     return this.route.snapshot.queryParamMap.get('resetPasswordToken') || '';
+  }
+
+  private isTokenAvailable(): boolean {
+    return this.getToken() ? true : false;
   }
 
   private buildForm(): void {
@@ -93,7 +99,22 @@ export class ResetPasswordComponent implements OnInit {
     }
 
     if (this.resetPasswordForm.valid) {
-      // TODO: make call to backend passing token from query param and new password
+      this.requestProcessing = true;
+      this.authService
+        .processResetPasswordLogic(this.getToken(), this.password.value)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: (response: ApiResponse) => {
+            console.log('subscribe - next callback ', response);
+            this.requestProcessing = false;
+            this.formSent = true;
+          },
+          error: error => {
+            console.log('subscribe - error callback ', error);
+            this.errorMsg = error.message;
+            this.requestProcessing = false;
+          },
+        });
     }
   }
 }

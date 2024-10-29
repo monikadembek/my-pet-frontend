@@ -4,11 +4,20 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { AuthService } from '../../services/auth.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ApiResponse } from '../../../models/models';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
-  imports: [CommonModule, FormsModule, InputTextModule, ButtonModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    InputTextModule,
+    ButtonModule,
+    RouterLink,
+  ],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss',
 })
@@ -23,11 +32,25 @@ export class ForgotPasswordComponent {
   constructor(private authService: AuthService) {}
 
   onSubmit(form: NgForm): void {
-    console.log('form: ', form);
     if (form.valid) {
-      // TODO: make call to backend to send user email
-      // if request is successfull hide form and show information to check inbox
-      // else show errors
+      this.requestProcessing = true;
+      const email = form.controls['email'].value;
+
+      this.authService
+        .processForgotPasswordLogic(email)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: (response: ApiResponse) => {
+            console.log('subscribe - next callback ', response);
+            this.requestProcessing = false;
+            this.formSent = true;
+          },
+          error: error => {
+            console.log('subscribe - error callback ', error);
+            this.errorMsg = error.message;
+            this.requestProcessing = false;
+          },
+        });
     }
   }
 }

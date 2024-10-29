@@ -27,3 +27,8 @@ export interface User {
   email: string;
   name: string;
 }
+
+export interface ResetPasswordDto {
+  resetPasswordToken: string;
+  password: string;
+}
