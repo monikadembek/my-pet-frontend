@@ -76,13 +76,3 @@
 ::ng-deep .p-button .p-button-icon-right {
   margin-left: 0.5rem !important;
 }
-
-.link {
-  color: inherit;
-  text-decoration: underline;
-  transition: color 0.3s;
-
-  &:hover {
-    color: $primary-color-light;
-  }
-}

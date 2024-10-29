@@ -105,7 +105,7 @@
           formControlName="confirmPassword"
           [feedback]="false"
           [toggleMask]="true"
-          [ngClass]="{ 'ng-invalid ng-dirty': name.errors }" />
+          [ngClass]="{ 'ng-invalid ng-dirty': confirmPassword.errors }" />
         @if (confirmPassword.dirty && confirmPassword.errors?.['required']) {
           <small class="error">Confirm password is required</small>
         }
@@ -134,7 +134,7 @@
 
     <p class="mt-5">
       Already have an account?
-      <a routerLink="/login" class="link">Login now</a>
+      <a routerLink="/login" class="text-link">Login now</a>
     </p>
   </div>
 </div>

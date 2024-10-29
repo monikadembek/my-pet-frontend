@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   AuthResponseDto,
+  ResetPasswordDto,
   SignInDto,
   SignUpDto,
   TokensResponseDto,
@@ -9,6 +10,7 @@ import {
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { API_URLS } from '../../../constants/api-urls.constants';
+import { ApiResponse } from '../../models/models';
 
 @Injectable({
   providedIn: 'root',
@@ -39,6 +41,20 @@ export class AuthApiService {
   refresh(): Observable<TokensResponseDto> {
     return this.http.get<TokensResponseDto>(
       `${this.apiUrl}${API_URLS.TOKEN_REFRESH}`
+    );
+  }
+
+  forgotPassword(email: string): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(
+      `${this.apiUrl}${API_URLS.FORGOT_PASSWORD}`,
+      { email }
+    );
+  }
+
+  resetPassword(resetPasswordDto: ResetPasswordDto): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(
+      `${this.apiUrl}${API_URLS.RESET_PASSWORD}`,
+      resetPasswordDto
     );
   }
 }

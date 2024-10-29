@@ -3,6 +3,7 @@ import { BehaviorSubject, catchError, map, Observable, retry } from 'rxjs';
 import { AuthApiService } from './auth-api.service';
 import {
   AuthResponseDto,
+  ResetPasswordDto,
   SignInDto,
   SignUpDto,
   TokensResponseDto,
@@ -17,6 +18,7 @@ import {
   USER_DATA_STORAGE_KEY,
 } from '../../../constants/constants';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ApiResponse } from '../../models/models';
 
 @Injectable({
   providedIn: 'root',
@@ -150,6 +152,31 @@ export class AuthService {
       map((response: TokensResponseDto) => {
         this.saveTokens(response.accessToken, response.refreshToken);
         return response;
+      })
+    );
+  }
+
+  processForgotPasswordLogic(email: string): Observable<ApiResponse> {
+    return this.authApiService.forgotPassword(email).pipe(
+      retry(3),
+      catchError(error => {
+        return this.errorHandlingService.handleError(error);
+      })
+    );
+  }
+
+  processResetPasswordLogic(
+    token: string,
+    password: string
+  ): Observable<ApiResponse> {
+    const resetPasswordDto: ResetPasswordDto = {
+      resetPasswordToken: token,
+      password,
+    };
+    return this.authApiService.resetPassword(resetPasswordDto).pipe(
+      retry(3),
+      catchError(error => {
+        return this.errorHandlingService.handleError(error);
       })
     );
   }
