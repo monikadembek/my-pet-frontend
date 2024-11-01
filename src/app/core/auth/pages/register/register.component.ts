@@ -17,6 +17,9 @@ import { AuthService } from '../../services/auth.service';
 import { DividerModule } from 'primeng/divider';
 import { NotificationsService } from '../../../services/notifications.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ImageSliderComponent } from '../../../../shared/components/image-slider/image-slider.component';
+import { Slide } from '../../../../shared/components/image-slider/models';
+import { SLIDES } from '../../../../constants/constants';
 
 @Component({
   selector: 'app-register',
@@ -29,6 +32,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     PasswordModule,
     RouterLink,
     DividerModule,
+    ImageSliderComponent,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
@@ -39,6 +43,8 @@ export class RegisterComponent implements OnInit {
   requestProcessing = false;
   strongPasswordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=\[\]{};:'",.<>?/~`|\\])[A-Za-z\d!@#$%^&*()_\-+=\[\]{};:'",.<>?/~`|\\]{8,}$/;
+
+  slides: Slide[] = SLIDES;
 
   destroyRef = inject(DestroyRef);
 

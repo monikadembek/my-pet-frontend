@@ -17,6 +17,9 @@ import { confirmPasswordValidator } from '../../../validators/confirm-password.v
 import { NotificationsService } from '../../../services/notifications.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ApiResponse } from '../../../models/models';
+import { ImageSliderComponent } from '../../../../shared/components/image-slider/image-slider.component';
+import { Slide } from '../../../../shared/components/image-slider/models';
+import { SLIDES } from '../../../../constants/constants';
 
 @Component({
   selector: 'app-reset-password',
@@ -29,6 +32,7 @@ import { ApiResponse } from '../../../models/models';
     PasswordModule,
     RouterLink,
     DividerModule,
+    ImageSliderComponent,
   ],
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.scss',
@@ -41,6 +45,8 @@ export class ResetPasswordComponent implements OnInit {
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=\[\]{};:'",.<>?/~`|\\])[A-Za-z\d!@#$%^&*()_\-+=\[\]{};:'",.<>?/~`|\\]{8,}$/;
   formSent = false;
   tokenExists = true;
+
+  slides: Slide[] = SLIDES;
 
   destroyRef = inject(DestroyRef);
 
