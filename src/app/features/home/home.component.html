@@ -1,16 +1,21 @@
 <div class="container flex">
   <div class="image-container hidden md:block">
-    <header class="header">
+    <app-image-slider
+      [showIndicators]="true"
+      [showNavigation]="false"
+      [autoplayInterval]="5000"
+      [slides]="slides"></app-image-slider>
+  </div>
+  <div class="content-container md:w-6 w-full">
+    <header class="header mb-6">
       <a routerLink="/">
         <img src="assets/logo/my-pet-logo.svg" alt="my pet logo" class="logo" />
       </a>
       <div class="header-text ml-4">
-        <h2>Welcome to</h2>
+        <h3 class="mb-1">Welcome to</h3>
         <h1>My Pet App</h1>
       </div>
     </header>
-  </div>
-  <div class="content-container md:w-6 w-full">
     <a
       routerLink="/register"
       class="p-button font-bold mb-5 button-link button-link--secondary-color">

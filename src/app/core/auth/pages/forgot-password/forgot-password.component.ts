@@ -7,6 +7,9 @@ import { AuthService } from '../../services/auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ApiResponse } from '../../../models/models';
 import { RouterLink } from '@angular/router';
+import { ImageSliderComponent } from '../../../../shared/components/image-slider/image-slider.component';
+import { Slide } from '../../../../shared/components/image-slider/models';
+import { SLIDES } from '../../../../constants/constants';
 
 @Component({
   selector: 'app-forgot-password',
@@ -17,6 +20,7 @@ import { RouterLink } from '@angular/router';
     InputTextModule,
     ButtonModule,
     RouterLink,
+    ImageSliderComponent,
   ],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss',
@@ -26,6 +30,8 @@ export class ForgotPasswordComponent {
   errorMsg = '';
   requestProcessing = false;
   formSent = false;
+
+  slides: Slide[] = SLIDES;
 
   destroyRef = inject(DestroyRef);
 

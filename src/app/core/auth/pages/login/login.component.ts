@@ -9,6 +9,9 @@ import { AuthResponseDto, SignInDto } from '../../models/auth-models';
 import { ErrorHandlingService } from '../../../services/error-handling.service';
 import { AuthService } from '../../services/auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ImageSliderComponent } from '../../../../shared/components/image-slider/image-slider.component';
+import { SLIDES } from '../../../../constants/constants';
+import { Slide } from '../../../../shared/components/image-slider/models';
 
 @Component({
   selector: 'app-login',
@@ -20,6 +23,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     InputTextModule,
     ButtonModule,
     PasswordModule,
+    ImageSliderComponent,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
@@ -29,6 +33,8 @@ export class LoginComponent {
   passwordInput = '';
   errorMsg = '';
   requestProcessing = false;
+
+  slides: Slide[] = SLIDES;
 
   destroyRef = inject(DestroyRef);
 
