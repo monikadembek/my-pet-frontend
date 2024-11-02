@@ -1,4 +1,5 @@
 import {
+  HttpErrorResponse,
   HttpHandlerFn,
   HttpInterceptorFn,
   HttpRequest,
@@ -32,11 +33,11 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
           const newAccessToken = authService.getToken(ACCESS_TOKEN_STORAGE_KEY);
           return next(addTokenToHeaders(req, newAccessToken as string));
         }),
-        catchError(error => {
+        catchError((error: HttpErrorResponse) => {
           // handle refresh token error (redirect to login page)
           console.error('Error handling expired access token', error);
           inject(Router).navigate(['login']);
-          return throwError(() => new Error(error));
+          return throwError(() => error);
         })
       );
   }
@@ -46,8 +47,9 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
   }
 
   return next(req).pipe(
-    catchError(error => {
+    catchError((error: HttpErrorResponse) => {
       // check for error due to expired token
+      console.log('interceptor error: ', error);
       if (error.status === 401 && accessToken) {
         const refreshToken = authService.getToken(REFRESH_TOKEN_STORAGE_KEY);
         if (refreshToken) {
@@ -55,7 +57,7 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
         }
       }
 
-      return throwError(() => new Error(error));
+      return throwError(() => error);
     })
   );
 };

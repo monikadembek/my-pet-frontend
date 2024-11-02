@@ -15,9 +15,8 @@ export class ErrorHandlingService {
       console.error('An error occured ', error.error);
     } else {
       // backend returned unsuccessfull response code
-      console.error(
-        `Backend returned status code ${error.status}, body was: ${error}`
-      );
+      console.error(`Backend returned status code ${error.status}, body was: `);
+      console.error(error.error);
     }
     return throwError(() => new Error(`Error occured. ${error.error.message}`));
   }
