@@ -94,3 +94,12 @@ a {
     border-bottom: 1px solid $primary-color-light;
   }
 }
+
+.error-text {
+  color: $error-color;
+}
+
+.input-error {
+  color: $primary-color-light;
+  margin-top: 5px;
+}

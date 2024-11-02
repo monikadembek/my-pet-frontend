@@ -35,17 +35,17 @@
             'ng-invalid ng-dirty': email.dirty && email.errors,
           }" />
         @if (email.dirty && email.errors?.['required']) {
-          <small class="error">Email is required</small>
+          <small class="input-error">Email is required</small>
         }
         @if (email.dirty && email.errors?.['maxlength']) {
           aa
-          <small class="error"
+          <small class="input-error"
             >Maximum allowed length is
             {{ email.errors?.['maxlength']['requiredLength'] }}</small
           >
         }
         @if (email.dirty && email.errors?.['pattern']) {
-          <small class="error">Entered email is invalid</small>
+          <small class="input-error">Entered email is invalid</small>
         }
       </div>
       <div class="flex flex-column gap-1 mb-3">
@@ -64,16 +64,16 @@
             'ng-invalid ng-dirty': password.dirty && password.errors,
           }" />
         @if (password.dirty && password.errors?.['required']) {
-          <small class="error">Password is required</small>
+          <small class="input-error">Password is required</small>
         }
         @if (password.dirty && password.errors?.['minlength']) {
-          <small class="error"
+          <small class="input-error"
             >Minimum required length is
             {{ password.errors?.['minlength']['requiredLength'] }}</small
           >
         }
         @if (password.dirty && password.errors?.['maxlength']) {
-          <small class="error"
+          <small class="input-error"
             >Maximum allowed length is
             {{ password.errors?.['maxlength']['requiredLength'] }}</small
           >
@@ -81,7 +81,7 @@
       </div>
 
       @if (errorMsg.length > 0) {
-        <p class="error" class="mt-2 mb-2">{{ errorMsg }}</p>
+        <p class="error-text mt-2 mb-2">{{ errorMsg }}</p>
       }
 
       <button
