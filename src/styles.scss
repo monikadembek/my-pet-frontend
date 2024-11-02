@@ -79,6 +79,10 @@ h6 {
 @import 'primeicons/primeicons.css';
 @import './assets/scss/index.scss';
 
+a {
+  text-decoration: none;
+}
+
 .text-link {
   color: inherit;
   display: inline-block;
