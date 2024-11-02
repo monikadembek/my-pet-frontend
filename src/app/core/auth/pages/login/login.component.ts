@@ -6,7 +6,6 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { AuthResponseDto, SignInDto } from '../../models/auth-models';
-import { ErrorHandlingService } from '../../../services/error-handling.service';
 import { AuthService } from '../../services/auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ImageSliderComponent } from '../../../../shared/components/image-slider/image-slider.component';
@@ -40,7 +39,6 @@ export class LoginComponent {
 
   constructor(
     private authService: AuthService,
-    private errorHandlingService: ErrorHandlingService,
     private router: Router
   ) {}
 
