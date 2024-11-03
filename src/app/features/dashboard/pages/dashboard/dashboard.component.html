@@ -9,12 +9,15 @@
     @if (isLoggedIn) {
       <button pButton (click)="logout()">Logout</button>
     } @else {
-      <button pButton (click)="login()">Login</button>
+      <button pButton (click)="redirectToLogin()">Login</button>
     }
   </header>
   <div class="content">
     <h3 class="mb-2">Hello, {{ user?.name || 'user' }}</h3>
     <h2 class="mb-4">Welcome to My Pet App</h2>
+    <div class="mb-4">
+      <button pButton (click)="deleteAccount()">Delete account</button>
+    </div>
     <p>More functionalities coming soon</p>
   </div>
 </div>
