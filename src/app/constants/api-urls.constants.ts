@@ -6,4 +6,5 @@ export const API_URLS = {
   USER_PROFILE: '/auth/profile',
   FORGOT_PASSWORD: '/auth/forgot-password',
   RESET_PASSWORD: '/auth/reset-password',
+  DELETE_ACCOUNT: '/auth/delete-account',
 };

@@ -57,4 +57,10 @@ export class AuthApiService {
       resetPasswordDto
     );
   }
+
+  deleteAccount(): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(
+      `${this.apiUrl}${API_URLS.DELETE_ACCOUNT}`
+    );
+  }
 }

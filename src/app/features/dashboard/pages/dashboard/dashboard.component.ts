@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/auth/services/auth.service';
 import { ButtonModule } from 'primeng/button';
 import { User } from '../../../../core/auth/models/auth-models';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NotificationsService } from '../../../../core/services/notifications.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,9 +18,12 @@ export class DashboardComponent implements OnInit {
   isLoggedIn = false;
   user: User | null = null;
 
+  destroyRef = inject(DestroyRef);
+
   constructor(
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private notoficationsService: NotificationsService
   ) {}
 
   ngOnInit() {
@@ -27,11 +32,32 @@ export class DashboardComponent implements OnInit {
     console.log(this.user);
   }
 
-  login() {
+  redirectToLogin() {
     this.router.navigate(['/login']);
   }
 
   logout() {
     this.authService.processLogoutLogic();
+  }
+
+  deleteAccount(): void {
+    this.authService
+      .deleteUserAccount()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: response => {
+          console.log('subscribe - next callback ', response);
+          this.notoficationsService.showSuccess(
+            'Account was successfully deleted'
+          );
+          this.router.navigate(['/']);
+        },
+        error: error => {
+          console.log(error);
+          this.notoficationsService.showError(
+            'Account was not deleted, please try again'
+          );
+        },
+      });
   }
 }

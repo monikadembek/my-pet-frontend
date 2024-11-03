@@ -180,4 +180,19 @@ export class AuthService {
       })
     );
   }
+
+  deleteUserAccount(): Observable<ApiResponse> {
+    return this.authApiService.deleteAccount().pipe(
+      retry(3),
+      catchError(error => {
+        return this.errorHandlingService.handleError(error);
+      }),
+      map((response: ApiResponse) => {
+        this.removeToken(ACCESS_TOKEN_STORAGE_KEY);
+        this.removeToken(REFRESH_TOKEN_STORAGE_KEY);
+        this.removeUserData();
+        return response;
+      })
+    );
+  }
 }
