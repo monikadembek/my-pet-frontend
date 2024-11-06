@@ -6,11 +6,13 @@ import { ButtonModule } from 'primeng/button';
 import { User } from '../../../../core/auth/models/auth-models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NotificationsService } from '../../../../core/services/notifications.service';
+import { TopMenuComponent } from '../../../../shared/components/top-menu/top-menu.component';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, ButtonModule, RouterLink],
+  imports: [CommonModule, ButtonModule, RouterLink, TopMenuComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
@@ -19,6 +21,8 @@ export class DashboardComponent implements OnInit {
   user: User | null = null;
 
   destroyRef = inject(DestroyRef);
+
+  menuItems: MenuItem[] = [];
 
   constructor(
     private router: Router,
@@ -30,14 +34,39 @@ export class DashboardComponent implements OnInit {
     this.isLoggedIn = this.authService.isLoggedIn();
     this.user = this.authService.getUserData();
     console.log(this.user);
+    if (this.user) {
+      this.menuItems = this.generateTopMenuLinks(this.user.userId);
+    }
   }
 
-  redirectToLogin() {
-    this.router.navigate(['/login']);
-  }
-
-  logout() {
-    this.authService.processLogoutLogic();
+  private generateTopMenuLinks(userId: number): MenuItem[] {
+    return [
+      {
+        label: 'Pets',
+        items: [
+          {
+            label: 'Rysia',
+            routerLink: `/${userId}/pets/rysia`,
+          },
+          {
+            label: 'Bercia',
+            routerLink: `/${userId}/pets/bercia`,
+          },
+        ],
+      },
+      {
+        label: 'Notifications',
+        routerLink: `/${userId}/notifications`,
+      },
+      {
+        label: 'Expenses Tracker',
+        routerLink: `/${userId}/expenses`,
+      },
+      {
+        label: 'User account',
+        routerLink: `/${userId}/user-information`,
+      },
+    ];
   }
 
   deleteAccount(): void {
@@ -59,5 +88,9 @@ export class DashboardComponent implements OnInit {
           );
         },
       });
+  }
+
+  onLogout(): void {
+    this.authService.processLogoutLogic();
   }
 }

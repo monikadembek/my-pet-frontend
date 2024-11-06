@@ -1,0 +1,27 @@
+<div class="top-menu">
+  <div class="menu-start">
+    <a routerLink="/">
+      <img src="assets/logo/my-pet-logo.svg" alt="my pet logo" class="logo" />
+    </a>
+    <a routerLink="/">
+      <h1 class="header-text ml-2">My Pet App</h1>
+    </a>
+  </div>
+  <div class="menu-items">
+    @if (isLoggedIn) {
+      <p-menubar [model]="items"> </p-menubar>
+    }
+  </div>
+  <div class="menu-end">
+    @if (isLoggedIn) {
+      <p-button
+        icon="pi pi-power-off"
+        [rounded]="true"
+        [text]="true"
+        (click)="emitLogout()"
+        class="icon-btn" />
+    } @else {
+      <p-button label="login" (click)="redirectToLogin()" size="small" />
+    }
+  </div>
+</div>
