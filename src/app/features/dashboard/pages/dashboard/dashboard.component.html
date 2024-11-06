@@ -1,16 +1,11 @@
 <div class="container">
   <header class="header">
-    <div class="flex align-items-center">
-      <a routerLink="/">
-        <img src="assets/logo/my-pet-logo.svg" alt="my pet logo" class="logo" />
-      </a>
-      <h1 class="header-text ml-3">My Pet App</h1>
+    <div class="menu">
+      <app-top-menu
+        [isLoggedIn]="isLoggedIn"
+        [items]="menuItems"
+        (logout)="onLogout()"></app-top-menu>
     </div>
-    @if (isLoggedIn) {
-      <button pButton (click)="logout()">Logout</button>
-    } @else {
-      <button pButton (click)="redirectToLogin()">Login</button>
-    }
   </header>
   <div class="content">
     <h3 class="mb-2">Hello, {{ user?.name || 'user' }}</h3>
@@ -18,6 +13,6 @@
     <div class="mb-4">
       <button pButton (click)="deleteAccount()">Delete account</button>
     </div>
-    <p>More functionalities coming soon</p>
+    <p class="text-center mt-4">More functionalities coming soon</p>
   </div>
 </div>
